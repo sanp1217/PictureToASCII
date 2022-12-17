@@ -14,7 +14,7 @@ def get_pixels(im: Image) -> list:
 
 def main():
     im = Image.open("ascii-pineapple.jpg")
-    pixels = get_pixels(im)
+    pixels_matrix = get_pixels(im)
 
 
 if __name__ == "__main__":
