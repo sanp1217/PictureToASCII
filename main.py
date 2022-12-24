@@ -1,6 +1,9 @@
 from PIL import Image
 
 def get_pixels(im: Image) -> list:
+    #resizes the image so it fits on the screen
+    im.thumbnail((1000, 200))
+
     pixels = im.load()
 
     pixels_2d = []
@@ -39,16 +42,21 @@ def get_ASCII_matrix(brightness_matrix: list) -> list:
         ascii_row = []
 
         for brightness in row:
-            #Using the linear interpolation formula to map the brightness value to an ascii value.
-            #The formula used is y = (x - x1) * (y2 -y1) / (x2-x1) + y1.
-            #x is the input, x1 and x2 are lower and upper bounds of input range.
-            #Same with y1 and y2 except that they are the bounds of the output range.
-            #the lower range is 0, which is why there is - and + 0.
-            character_index = int((brightness - min_brightness) * (len(characters) - 1 - 0) / (
-                                max_brightness - min_brightness) + 0)
-            character = characters[character_index]
 
-            ascii_row.append(character)
+            #This loop is so the ascii picture stretches out
+            #as it looks squashed without it.
+            for i in range(3):
+
+                #Using the linear interpolation formula to map the brightness value to an ascii value.
+                #The formula used is y = (x - x1) * (y2 -y1) / (x2-x1) + y1.
+                #x is the input, x1 and x2 are lower and upper bounds of input range.
+                #Same with y1 and y2 except that they are the bounds of the output range.
+                #the lower range is 0, which is why there is - and + 0.
+                character_index = int((brightness - min_brightness) * (len(characters) - 1 - 0) / (
+                                    max_brightness - min_brightness) + 0)
+                character = characters[character_index]
+
+                ascii_row.append(character)
 
         ascii_matrix.append(ascii_row)
 
