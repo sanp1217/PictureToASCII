@@ -27,20 +27,49 @@ def get_brightness_matrix(pixel_matrix: list) -> list:
         brightness_matrix.append(row)
 
     return brightness_matrix
+
+def get_ASCII_matrix(brightness_matrix: list) -> list:
+    characters = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
+    min_brightness = min([item for sublist in brightness_matrix for item in sublist])
+    max_brightness = max([item for sublist in brightness_matrix for item in sublist])
+
+    ascii_matrix = []
+
+    for row in brightness_matrix:
+        ascii_row = []
+
+        for brightness in row:
+            #Using the linear interpolation formula to map the brightness value to an ascii value.
+            #The formula used is y = (x - x1) * (y2 -y1) / (x2-x1) + y1.
+            #x is the input, x1 and x2 are lower and upper bounds of input range.
+            #Same with y1 and y2 except that they are the bounds of the output range.
+            #the lower range is 0, which is why there is - and + 0.
+            character_index = int((brightness - min_brightness) * (len(characters) - 1 - 0) / (
+                                max_brightness - min_brightness) + 0)
+            character = characters[character_index]
+
+            ascii_row.append(character)
+
+        ascii_matrix.append(ascii_row)
+
+    return ascii_matrix
+
+
 def main():
     im = Image.open("ascii-pineapple.jpg")
 
     pixels_matrix = get_pixels(im)
-    print("pixel matrix length: " + str(len(pixels_matrix)) + " " + str(len(pixels_matrix[0])))
-
+    #print("pixel matrix length: " + str(len(pixels_matrix)) + " " + str(len(pixels_matrix[0])))
 
     brightness_matrix = get_brightness_matrix(pixels_matrix)
+    #print("brightness length: "+ (str(len(brightness_matrix))) + " " + str(len(brightness_matrix[0])))
+    #print(brightness_matrix)
 
-    print("brightness length: "+ (str(len(brightness_matrix))) + " " + str(len(brightness_matrix[0])))
+    ascii_matrix = get_ASCII_matrix(brightness_matrix)
+    #To turn the rows in the matrix into a single string with line breaks between each row.
+    result = '\n'.join([''.join(row) for row in ascii_matrix])
 
-    print(brightness_matrix)
-
-
+    print(result)
 
 if __name__ == "__main__":
     main()
